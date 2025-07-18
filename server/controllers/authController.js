@@ -5,7 +5,8 @@ const User = require("../models/User");
 
 // Signup Endpoint Logic
 exports.signup = async (req, res) => {
-    const { username, email, password } = req.body;
+   try{
+     const { username, email, password } = req.body;
 
     // Check if user already exists by email or username
     const emailExists = await User.findOne({ email });
@@ -21,11 +22,17 @@ exports.signup = async (req, res) => {
         expiresIn: '1h'
     });
     res.json({ token });
+   } catch (error) {
+       console.error(error);
+       console.error('Signup Error:', error)
+       res.status(500).json({message: "server error during"})
+   }
 };
 
 // Login Endpoint Logic
 exports.login = async (req, res) => {
-    const { email, password } = req.body;
+   try {
+     const { email, password } = req.body;
 
     const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: "User Not Found"});
@@ -37,4 +44,8 @@ exports.login = async (req, res) => {
         expiresIn: '1h'
     });
     res.json({ token });
+} catch (error) {
+    console.error('Signup Error:', error);
+    res.status(500).json({ message: "server error during login"})
+}
 }
