@@ -6,7 +6,24 @@ const connectDB = require("./config/db");
 const app = express();
 connectDB();
 
-app.use(cors());
+const allowedOrigins = [
+  "http://localhost:5173",                 // local dev
+  "https://week7assignment-vox4.onrender.com", // production
+];
+
+app.use(
+    cors(
+        {
+            origin: (origin, cb) => {
+                // Allow Postman/curl whoch send no origi
+                if (!origin || allowedOrigins.includes(origin)) return
+                    cb(null, true);
+                },
+                credentials: true,
+                methods: "GET,PUT,POST,DELETE",
+                allowedHeaders: "Content-Type,Authorization",
+        }
+    ));
 app.use(express.json());
 
 app.use("/api/auth", require("./routes/authRoutes"));
