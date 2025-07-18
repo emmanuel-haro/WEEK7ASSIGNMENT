@@ -18,7 +18,8 @@ app.use(
                 // Allow Postman/curl whoch send no origi
                 if (!origin || allowedOrigins.includes(origin)) return
                     cb(null, true);
-                },
+                    cb(new Error("Not allowed by CORS"));
+            },
                 credentials: true,
                 methods: "GET,PUT,POST,DELETE",
                 allowedHeaders: "Content-Type,Authorization",
